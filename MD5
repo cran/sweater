@@ -1,4 +1,4 @@
-6d8991be7b1afca41631d149c44bdc8f *DESCRIPTION
+f668fc6117abc4b4e5efcccec8e380d3 *DESCRIPTION
 b172356babce4bf1cd453a9164b284d6 *NAMESPACE
 65ced174bccb6aaaead84a14f51163f3 *R/RcppExports.R
 b8fa0c9a036d6f7fa0e064716395a1cf *R/dictionary.R
@@ -7,11 +7,11 @@ b8fa0c9a036d6f7fa0e064716395a1cf *R/dictionary.R
 4e90aa11ad92af8cb3355ae4757871c0 *R/nas.R
 bbf5ac5662535f3dab71ecaefdb09b80 *R/query.R
 e2ff72a3cbc2137b5eafafab1f0531aa *R/rnd.R
-8deb575a6a8cbd8f6ce91750e3c64a9c *R/rnsb.R
-049e10c7f192d5a2390c4a44f8381936 *R/semaxis.R
+170cdc874d7341ca9f578ec921a38300 *R/rnsb.R
+5948a96a87dae044b18a3f0ef83872d1 *R/semaxis.R
 f1b1be2662808b6af58034d712f4160d *R/sweater-package.R
 edff1e9fc8b347a4981d9375c88050b5 *R/sweater.R
-24806f405178341f80320c209d921245 *README.md
+893897af1cedc9c3b3d4e0887db3f729 *README.md
 ee21edce48ac8a1130b16caec9796936 *data/glove_math.rda
 18b64d4ec426934af690d57ac910a91d *data/googlenews.rda
 f473a5a13408647609641982bd16e616 *data/small_reddit.rda
@@ -33,7 +33,7 @@ cd51f6bfaf165d67ac0c5c75065d5b94 *man/mac.Rd
 c1c4191323aaa8b350346b2ccafb6549 *man/read_word2vec.Rd
 34c3ba387e6e1cfd11b93a64365e93f6 *man/rnd.Rd
 f4ae7870be8ed227fd01ebdef32bb6c7 *man/rnd_es.Rd
-a94113f4975b89e11fff2b88c1a322d1 *man/rnsb.Rd
+30bf84a84667873f60fffebbb37f3fa4 *man/rnsb.Rd
 f6f0c5ad5fae1191732efb130b0bfe3a *man/rnsb_es.Rd
 958e7e97d0a291440f574d6ba69a8170 *man/semaxis.Rd
 d1b227be71b4a05f5cb0ab992a23f6b1 *man/small_reddit.Rd
