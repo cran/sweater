@@ -1,6 +1,6 @@
 Package: sweater
 Title: Speedy Word Embedding Association Test and Extras Using R
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person(given = "Chung-hong",
            family = "Chan",
@@ -20,8 +20,8 @@ Suggests: covr, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: R (>= 3.5)
 NeedsCompilation: yes
-Packaged: 2021-11-22 11:06:48 UTC; chainsawriot
+Packaged: 2021-11-23 21:35:07 UTC; chainsawriot
 Author: Chung-hong Chan [aut, cre] (<https://orcid.org/0000-0002-6232-7530>)
 Maintainer: Chung-hong Chan <chainsawtiney@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-11-22 11:40:02 UTC
+Date/Publication: 2021-11-24 11:10:02 UTC

@@ -1,4 +1,4 @@
-f668fc6117abc4b4e5efcccec8e380d3 *DESCRIPTION
+909640ddc63eff0671c1a8ffe8bbea40 *DESCRIPTION
 b172356babce4bf1cd453a9164b284d6 *NAMESPACE
 65ced174bccb6aaaead84a14f51163f3 *R/RcppExports.R
 b8fa0c9a036d6f7fa0e064716395a1cf *R/dictionary.R
@@ -41,7 +41,7 @@ d1b227be71b4a05f5cb0ab992a23f6b1 *man/small_reddit.Rd
 50656d317f8a0131182952d79dda0526 *man/weat_es.Rd
 d8566f7d8cfdd391a7f7ffcabba9afbf *man/weat_resampling.Rd
 12d792ed7bd483852afed4f945e86be1 *src/RcppExports.cpp
-c5967fbee20fd4a5fcba019fa4be438f *src/weat.cpp
+331b5c0f3cd62a978345029fcf418761 *src/weat.cpp
 a611d59234d9d1ab07e7d7a67cc26fba *tests/testdata/bing_neg.rda
 76fd4bf8b8bb39c00201120bf061badb *tests/testdata/bing_pos.rda
 b646d2cceed9f10e1c6854ec08803435 *tests/testdata/newsmap_europe.rda
