@@ -18,10 +18,12 @@ embeddings.
 
 The package provides functions that are speedy. They are either
 implemented in C++, or are speedy but accurate approximation of the
-original implementation proposed by Caliskan et al (2017).
+original implementation proposed by Caliskan et al (2017). See the
+benchmark
+[here](https://github.com/chainsawriot/sweater/blob/master/paper/benchmark.md).
 
 This package provides extra methods such as Relative Norm Distance,
-SemAxis and Relative Negative Sentiment Bias.
+Embedding Coherence Test, SemAxis and Relative Negative Sentiment Bias.
 
 If your goal is to reproduce the analysis in Caliskan et al (2017),
 please consider using the [original Java
@@ -86,6 +88,7 @@ functions listed below.
 | S\_words           | A\_words           | Mean Average Cosine Similarity (Mazini et al. 2019)         | mac(), mac\_es()                                      |
 | S\_words           | A\_words, B\_words | Relative Norm Distance (Garg et al. 2018)                   | rnd(), rnd\_es()                                      |
 | S\_words           | A\_words, B\_words | Relative Negative Sentiment Bias (Sweeney & Najafian. 2019) | rnsb(), rnsb\_es()                                    |
+| S\_words           | A\_words, B\_words | Embedding Coherence Test (Dev & Phillips. 2019)             | ect(), ect\_es(), plot\_ect()                         |
 | S\_words           | A\_words, B\_words | SemAxis (An et al. 2018)                                    | semaxis()                                             |
 | S\_words           | A\_words, B\_words | Normalized Association Score (Caliskan et al. 2017)         | nas()                                                 |
 | S\_words, T\_words | A\_words, B\_words | Word Embedding Association Test (Caliskan et al. 2017)      | weat(), weat\_es(), weat\_resampling(), weat\_exact() |
@@ -99,8 +102,9 @@ al. (2020).
 
 ``` r
 require(sweater)
-#> Loading required package: sweater
+```
 
+``` r
 S1 <- c("janitor", "statistician", "midwife", "bailiff", "auctioneer", 
 "photographer", "geologist", "shoemaker", "athlete", "cashier", 
 "dancer", "housekeeper", "accountant", "physicist", "gardener", 
@@ -121,6 +125,18 @@ A1 <- c("he", "son", "his", "him", "father", "man", "boy", "himself",
 "brothers", "uncle", "uncles", "nephew", "nephews")
 
 mac_neg <- query(googlenews, S_words = S1, A_words = A1)
+mac_neg
+#> 
+#> ── sweater object ──────────────────────────────────────────────────────────────
+#> Test type:  mac 
+#> Effect size:  0.1375856
+#> 
+#> ── Functions ───────────────────────────────────────────────────────────────────
+#> • <calculate_es()>: Calculate effect size
+#> • <plot()>: Plot the bias of each individual word
+```
+
+``` r
 sort(mac_neg$P)
 #>         sales      designer     economist       manager      clerical 
 #>  -0.002892495   0.039197285   0.046155954   0.047322071   0.048912403 
@@ -168,23 +184,37 @@ B1 <- c("she", "daughter", "hers", "her", "mother", "woman", "girl",
 )
 
 garg_f1 <- query(googlenews, S_words = S1, A_words = A1, B_words = B1)
+garg_f1
+#> 
+#> ── sweater object ──────────────────────────────────────────────────────────────
+#> Test type:  rnd 
+#> Effect size:  -6.341598
+#> 
+#> ── Functions ───────────────────────────────────────────────────────────────────
+#> • <calculate_es()>: Calculate effect size
+#> • <plot()>: Plot the bias of each individual word
 ```
 
-The function `plot_bias` can be used to plot the bias of each word in S.
-Words such as “nurse”, “midwife” and “librarian” are more associated
-with female, as indicated by the positive relative norm distance.
+The object can be plotted by the function `plot` to show the bias of
+each word in S. Words such as “nurse”, “midwife” and “librarian” are
+more associated with female, as indicated by the positive relative norm
+distance.
 
 ``` r
-plot_bias(garg_f1)
+plot(garg_f1)
 ```
 
 <img src="man/figures/README-rndplot-1.png" width="100%" />
 
 The effect size is simply the sum of all relative norm distance values
-(Equation 3 in Garg et al. 2018). The more positive value indicates that
-words in `S_words` are more associated with `B_words`. As the effect
-size is negative, it indicates that the concept of occupation is more
-associated with `A_words`, i.e. male.
+(Equation 3 in Garg et al. 2018). It is displayed simply by printing the
+object. You can also use the function `calculate_es` to obtain the
+numeric result.
+
+The more positive effect size indicates that words in `S_words` are more
+associated with `B_words`. As the effect size is negative, it indicates
+that the concept of occupation is more associated with `A_words`,
+i.e. male.
 
 ``` r
 calculate_es(garg_f1)
@@ -205,10 +235,84 @@ S2 <- c("mexicans", "asians", "whites", "blacks", "latinos")
 A2 <- c("respect")
 B2 <- c("disrespect")
 res <- query(small_reddit, S_words = S2, A_words = A2, B_words = B2, method = "semaxis", l = 1)
-plot_bias(res)
+plot(res)
 ```
 
 <img src="man/figures/README-semxaxisplot-1.png" width="100%" />
+
+## Example: Embedding Coherence Test
+
+Embedding Coherence Test (Dev & Phillips, 2019) is similar to SemAxis.
+The only significant different is that no “SemAxis” is calculated (the
+difference between the average word vectors of `A_words` and `B_words`).
+Instead, it calculates two separate axes for `A_words` and `B_words`.
+Then it calculates the proximity of each word in `S_words` with the two
+axes. It is like doing two separate `mac`, but `ect` averages the word
+vectors of `A_words` / `B_words` first.
+
+It is important to note that `P` is a 2-D matrix. Hence, the plot is
+2-dimensional. Words above the equality line are more associated with
+`B_words` and vice versa.
+
+``` r
+res <- query(googlenews, S_words = S1, A_words = A1, B_words = B1, method = "ect")
+res$P
+#>           janitor statistician   midwife   bailiff auctioneer photographer
+#> A_words 0.3352883   0.13495237 0.1791162 0.2698131 0.10123085    0.2305419
+#> B_words 0.2598501   0.08300127 0.3851766 0.2331852 0.06957685    0.2077952
+#>          geologist shoemaker   athlete   cashier    dancer housekeeper
+#> A_words 0.13817054 0.2842002 0.2607956 0.2340296 0.2282981   0.3205498
+#> B_words 0.05101061 0.1850456 0.2570477 0.3171645 0.3508183   0.4610773
+#>         accountant  physicist  gardener   dentist    weaver blacksmith
+#> A_words  0.2029543 0.17446868 0.2657907 0.2672548 0.1767915  0.3080301
+#> B_words  0.1789482 0.08362829 0.2873140 0.2623802 0.2475565  0.1603038
+#>         psychologist supervisor mathematician   surveyor     tailor   designer
+#> A_words    0.2322444  0.1852041     0.2423898 0.17124643 0.11379186 0.06231389
+#> B_words    0.2418605  0.1920407     0.1332954 0.09133125 0.07585015 0.14343468
+#>          economist  mechanic   laborer postmaster    broker   chemist librarian
+#> A_words 0.07450962 0.3435494 0.3904412  0.2128712 0.1525395 0.1696522 0.1237070
+#> B_words 0.04008006 0.1882135 0.3011930  0.2223472 0.1112061 0.1440956 0.3147546
+#>         attendant   clerical  musician    porter scientist carpenter    sailor
+#> A_words 0.2278508 0.07601974 0.3349666 0.2642203 0.1263250 0.4006367 0.3169384
+#> B_words 0.2495253 0.15137979 0.2735083 0.1957056 0.1023058 0.2425019 0.3083380
+#>         instructor   sheriff     pilot inspector     mason     baker
+#> A_words  0.2034101 0.2256034 0.1339011 0.1741268 0.3154815 0.2847909
+#> B_words  0.1903228 0.2029597 0.1112940 0.1272682 0.1585883 0.2981460
+#>         administrator    architect collector   operator   surgeon    driver
+#> A_words    0.08028339 0.1397101748 0.1572854 0.07317863 0.2337787 0.2733306
+#> B_words    0.10544115 0.0008324421 0.1341877 0.08706450 0.1926543 0.2363398
+#>           painter conductor     nurse      cook   engineer   retired
+#> A_words 0.2703030 0.1832604 0.2187359 0.2278016 0.16052771 0.2494770
+#> B_words 0.2413599 0.1034218 0.4470728 0.2849471 0.03511008 0.1146753
+#>                sales    lawyer    clergy physician    farmer     clerk
+#> A_words -0.006505338 0.2937436 0.1920894 0.1777700 0.3090903 0.2519372
+#> B_words  0.032652565 0.2345743 0.2081210 0.1555298 0.2220792 0.3146901
+#>            manager     guard    artist      smith  official    police    doctor
+#> A_words 0.07080773 0.1948853 0.1819504 0.15938222 0.1300515 0.3116599 0.3413265
+#> B_words 0.03393879 0.1344678 0.2274278 0.09691327 0.0743546 0.2590763 0.3390124
+#>         professor   student     judge   teacher    author secretary   soldier
+#> A_words 0.1604224 0.2540493 0.2008630 0.2675705 0.0828586 0.1211243 0.3599860
+#> B_words 0.1368013 0.3299938 0.2493299 0.3567416 0.1224295 0.1220939 0.3076572
+plot(res)
+```
+
+<img src="man/figures/README-ectplot-1.png" width="100%" />
+
+Effect size can also be calculated. It is the Spearman Correlation
+Coefficient of the two rows in `P`. Higher value indicates more
+“coherent”, i.e. less bias.
+
+``` r
+res
+#> 
+#> ── sweater object ──────────────────────────────────────────────────────────────
+#> Test type:  ect 
+#> Effect size:  0.7001504
+#> 
+#> ── Functions ───────────────────────────────────────────────────────────────────
+#> • <calculate_es()>: Calculate effect size
+#> • <plot()>: Plot the bias of each individual word
+```
 
 ## Example: Relative Negative Sentiment Bias
 
@@ -235,7 +339,7 @@ The analysis shows that `indian`, `mexican`, and `russian` are more
 likely to be associated with negative sentiment.
 
 ``` r
-plot_bias(sn)
+plot(sn)
 ```
 
 <img src="man/figures/README-rnsbplot-1.png" width="100%" />
@@ -245,8 +349,15 @@ P from the uniform distribution. It is extremely close to the value
 reported in the original paper (0.6225).
 
 ``` r
-rnsb_es(sn)
-#> [1] 0.6228853
+sn
+#> 
+#> ── sweater object ──────────────────────────────────────────────────────────────
+#> Test type:  rnsb 
+#> Effect size:  0.6228853
+#> 
+#> ── Functions ───────────────────────────────────────────────────────────────────
+#> • <calculate_es()>: Calculate effect size
+#> • <plot()>: Plot the bias of each individual word
 ```
 
 ## Support for Quanteda Dictionary
@@ -268,7 +379,7 @@ load("tests/testdata/dictionary_demo.rda")
 
 require(quanteda)
 #> Loading required package: quanteda
-#> Package version: 3.1.0
+#> Package version: 3.2.0
 #> Unicode version: 13.0
 #> ICU version: 66.1
 #> Parallel computing: 8 of 8 threads used.
@@ -337,7 +448,7 @@ Country-level analysis
 
 ``` r
 country_level <- rnsb(w = dictionary_demo, S_words = newsmap_europe, A_words = bing_pos, B_words = bing_neg, levels = 2)
-plot_bias(country_level)
+plot(country_level)
 ```
 
 <img src="man/figures/README-rnsb2-1.png" width="100%" />
@@ -346,7 +457,7 @@ Region-level analysis
 
 ``` r
 region_level <- rnsb(w = dictionary_demo, S_words = newsmap_europe, A_words = bing_pos, B_words = bing_neg, levels = 1)
-plot_bias(region_level)
+plot(region_level)
 ```
 
 <img src="man/figures/README-rnsb3-1.png" width="100%" />
@@ -391,7 +502,7 @@ B3 <- c("she", "daughter", "hers", "her", "mother", "woman", "girl",
 )
 
 nas_f1 <- query(googlenews, S_words= S3, A_words = A3, B_words = B3, method = "nas")
-plot_bias(nas_f1)
+plot(nas_f1)
 ```
 
 <img src="man/figures/README-nasplot-1.png" width="100%" />
@@ -428,8 +539,15 @@ B4 <- c("female", "woman", "girl", "sister", "she", "her", "hers", "daughter")
 sw <- query(glove_math, S4, T4, A4, B4)
 
 # extraction of effect size
-calculate_es(sw)
-#> [1] 1.055015
+sw
+#> 
+#> ── sweater object ──────────────────────────────────────────────────────────────
+#> Test type:  weat 
+#> Effect size:  1.055015
+#> 
+#> ── Functions ───────────────────────────────────────────────────────────────────
+#> • <calculate_es()>: Calculate effect size
+#> • <weat_resampling()>: Conduct statistical test
 ```
 
 ## A note about the effect size
@@ -523,22 +641,25 @@ By contributing to this project, you agree to abide by its terms.
     biases.” Science 356.6334 (2017): 183-186.
 5.  Cohen, J. (1988), Statistical Power Analysis for the Behavioral
     Sciences, 2nd Edition. Hillsdale: Lawrence Erlbaum.
-6.  Garg, N., Schiebinger, L., Jurafsky, D., & Zou, J. (2018). Word
+6.  Dev, S., & Phillips, J. (2019, April). Attenuating bias in word
+    vectors. In The 22nd International Conference on Artificial
+    Intelligence and Statistics (pp. 879-887). PMLR.
+7.  Garg, N., Schiebinger, L., Jurafsky, D., & Zou, J. (2018). Word
     embeddings quantify 100 years of gender and ethnic stereotypes.
     Proceedings of the National Academy of Sciences, 115(16),
     E3635-E3644.
-7.  Manzini, T., Lim, Y. C., Tsvetkov, Y., & Black, A. W. (2019). Black
+8.  Manzini, T., Lim, Y. C., Tsvetkov, Y., & Black, A. W. (2019). Black
     is to criminal as caucasian is to police: Detecting and removing
     multiclass bias in word embeddings. arXiv preprint arXiv:1904.04047.
-8.  McGrath, R. E., & Meyer, G. J. (2006). When effect sizes disagree:
+9.  McGrath, R. E., & Meyer, G. J. (2006). When effect sizes disagree:
     the case of r and d. Psychological methods, 11(4), 386.
-9.  Rosenthal, R. (1991), Meta-Analytic Procedures for Social Research.
+10. Rosenthal, R. (1991), Meta-Analytic Procedures for Social Research.
     Newbury Park: Sage
-10. Sweeney, C., & Najafian, M. (2019, July). A transparent framework
+11. Sweeney, C., & Najafian, M. (2019, July). A transparent framework
     for evaluating unintended demographic bias in word embeddings. In
     Proceedings of the 57th Annual Meeting of the Association for
     Computational Linguistics (pp. 1662-1667).
-11. Watanabe, K. (2018). Newsmap: A semi-supervised approach to
+12. Watanabe, K. (2018). Newsmap: A semi-supervised approach to
     geographical news classification. Digital Journalism, 6(3), 294-309.
 
 -----

@@ -20,10 +20,10 @@ all_b<- c("she", "daughter", "hers", "her", "mother", "woman", "girl",
 "girls", "females", "sisters", "aunt", "aunts", "niece", "nieces"
 )
 
-S1 <- sample(all_s, sample(2:10))
-T1 <- sample(all_s, sample(2:10))
-A1 <- sample(all_a, sample(2:10))
-B1 <- sample(all_b, sample(2:10))
+S1 <- sample(all_s, sample(2:10, size = 1))
+T1 <- sample(all_s, sample(2:10, size = 1))
+A1 <- sample(all_a, sample(2:10, size = 1))
+B1 <- sample(all_b, sample(2:10, size = 1))
 garbage <- "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
 
 test_that("mac add na", {
@@ -69,6 +69,18 @@ test_that("nas add na", {
     expect_length(nas(googlenews, S1, A1, append(B1, garbage))$P, length(S1))
     expect_length(nas(googlenews, S1, A1, append(B1, garbage))$B_words, length(B1))
     expect_output(nas(googlenews, S1, A1, append(B1, garbage), verbose = TRUE))
+})
+
+test_that("ect add na", {
+    expect_length(ect(googlenews, append(S1, garbage), A1, B1)$u_a, length(S1))
+    expect_output(ect(googlenews, append(S1, garbage), A1, B1, verbose = TRUE))
+    expect_length(ect(googlenews, append(S1, garbage), A1, B1)$S_words, length(S1))
+    expect_length(ect(googlenews, S1, append(A1, garbage), B1)$u_a, length(S1))
+    expect_length(ect(googlenews, S1, append(A1, garbage), B1)$A_words, length(A1))
+    expect_output(ect(googlenews, S1, append(A1, garbage), B1, verbose = TRUE))
+    expect_length(ect(googlenews, S1, A1, append(B1, garbage))$u_a, length(S1))
+    expect_length(ect(googlenews, S1, A1, append(B1, garbage))$B_words, length(B1))
+    expect_output(ect(googlenews, S1, A1, append(B1, garbage), verbose = TRUE))
 })
 
 test_that("weat add na", {
