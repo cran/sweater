@@ -1,6 +1,6 @@
 Package: sweater
 Title: Speedy Word Embedding Association Test and Extras Using R
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: 
     person(given = "Chung-hong",
            family = "Chan",
@@ -17,13 +17,12 @@ BugReports: https://github.com/chainsawriot/sweater/issues
 LinkingTo: Rcpp
 Imports: Rcpp, purrr, quanteda, LiblineaR, proxy, data.table, cli,
         combinat
-Suggests: knitr, covr, testthat (>= 3.0.0), rmarkdown, bench
+Suggests: covr, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: R (>= 3.5)
-VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2022-04-20 10:23:41 UTC; chainsawriot
+Packaged: 2022-05-03 19:43:46 UTC; chainsawriot
 Author: Chung-hong Chan [aut, cre] (<https://orcid.org/0000-0002-6232-7530>)
 Maintainer: Chung-hong Chan <chainsawtiney@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-04-20 12:30:02 UTC
+Date/Publication: 2022-05-04 07:30:02 UTC
