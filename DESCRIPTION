@@ -1,6 +1,6 @@
 Package: sweater
 Title: Speedy Word Embedding Association Test and Extras Using R
-Version: 0.1.6
+Version: 0.1.7
 Authors@R: 
     person(given = "Chung-hong",
            family = "Chan",
@@ -11,7 +11,7 @@ Description: Conduct various tests for evaluating implicit biases in word embedd
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 URL: https://github.com/chainsawriot/sweater
 BugReports: https://github.com/chainsawriot/sweater/issues
 LinkingTo: Rcpp
@@ -21,8 +21,8 @@ Suggests: covr, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: R (>= 3.5)
 NeedsCompilation: yes
-Packaged: 2022-05-03 19:43:46 UTC; chainsawriot
+Packaged: 2022-11-05 10:27:41 UTC; chainsawriot
 Author: Chung-hong Chan [aut, cre] (<https://orcid.org/0000-0002-6232-7530>)
 Maintainer: Chung-hong Chan <chainsawtiney@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-05-04 07:30:02 UTC
+Date/Publication: 2022-11-05 10:50:02 UTC
